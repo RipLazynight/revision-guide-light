@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Abdul’s Revision</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Revision">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f4f6fb;--card:#fff;--ink:#1b2440;--mute:#5d6785;--line:#dde2ef;--accent:#3454d1;
+--maths:#3454d1;--science:#0f9d7a;--history:#b5532a;--geo:#8a5cd0;--english:#d1407a;--french:#c28a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#12172a;--card:#1c2340;--ink:#eef1fb;--mute:#a3adcb;--line:#2e3760;--accent:#7f98ff;
+--maths:#7f98ff;--science:#3fd3ac;--history:#f09a6c;--geo:#b995f5;--english:#f27fae;--french:#f0c04a}}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 ui-rounded,"SF Pro Rounded",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+header{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:14px 16px 8px;z-index:5;border-bottom:1px solid var(--line)}
+.wrap{max-width:720px;margin:0 auto}
+h1{font-size:1.6rem;margin:0 0 10px;letter-spacing:-.02em}
+input{width:100%;font:inherit;padding:12px 14px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:var(--ink)}
+input:focus{outline:3px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0 4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;font:inherit;font-size:.9rem;font-weight:600;padding:7px 14px;border-radius:999px;border:2px solid var(--c,var(--accent));background:transparent;color:var(--c,var(--accent));cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--c,var(--accent));color:#fff}
+@media (prefers-color-scheme:dark){.chip[aria-pressed="true"]{color:#12172a}}
+main{padding:14px 16px 40px}
+.count{color:var(--mute);font-size:.9rem;margin:0 0 10px}
+details{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--c);border-radius:14px;margin:0 0 10px}
+summary{cursor:pointer;padding:13px 14px;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:10px;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary small{font-weight:600;color:var(--c);font-size:.78rem;white-space:nowrap}
+.body{padding:0 14px 14px}
+.body p{margin:0 0 8px}
+.try{background:var(--bg);border-radius:10px;padding:10px 12px;margin-top:8px}
+.try summary{padding:0;font-size:.95rem;color:var(--accent)}
+.try details{border:0;background:none;margin:0}
+.ans{margin-top:6px;font-weight:600}
+.empty{text-align:center;color:var(--mute);padding:40px 10px}
+mark{background:#ffe27a;color:#222;border-radius:3px}
+.top{display:flex;gap:8px;align-items:center;margin-bottom:10px}.top h1{margin:0;flex:1}
+select{font:inherit;font-weight:600;padding:8px 10px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink)}
+.btn{font:inherit;font-weight:700;padding:9px 14px;border-radius:12px;border:0;background:var(--accent);color:#fff;cursor:pointer}
+.btn.alt{background:var(--line);color:var(--ink)}
+@media (prefers-color-scheme:dark){.btn:not(.alt){color:#12172a}}
+dialog{border:0;border-radius:18px;background:var(--card);color:var(--ink);width:min(92vw,520px);padding:18px}
+dialog::backdrop{background:#0008}
+dialog label{display:block;font-weight:600;margin:10px 0 0}
+dialog input:not([type=file]),dialog textarea,dialog select{display:block;width:100%;margin-top:4px;font:inherit;padding:10px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink)}
+dialog h2{margin:0}.hint{color:var(--mute);font-size:.85rem}
+.row{display:flex;gap:8px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap}
+#pv img,.body img{max-width:100%;border-radius:10px;margin:6px 0;display:block}
+.del{font:inherit;font-size:.85rem;background:none;border:0;color:#c0392b;cursor:pointer;padding:6px 0}
+#toasts{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);left:50%;transform:translateX(-50%);z-index:50;width:min(92vw,360px);pointer-events:none}
+.toast{display:flex;gap:12px;align-items:center;background:#1d1d1d;border:3px solid #8b8b8b;border-top-color:#c6c6c6;border-left-color:#c6c6c6;box-shadow:0 0 0 2px #000,0 6px 0 rgba(0,0,0,.35);padding:10px 14px;color:#fff;font:700 15px/1.3 "Courier New",ui-monospace,monospace;transform:translateY(-160%);transition:transform .45s cubic-bezier(.2,.9,.3,1.2);margin-bottom:8px}
+.toast.in{transform:none}
+.toast i{font-style:normal;font-size:30px;width:44px;height:44px;flex:none;display:grid;place-items:center;background:#3a3a3a;border:2px solid #000}
+.toast b{display:block;color:#ffff55;text-shadow:2px 2px #3f3f15}
+.toast span{text-shadow:2px 2px #222}
+.tr{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}.tr i{font-style:normal;font-size:26px;width:40px;text-align:center}.tr.lock{opacity:.4;filter:grayscale(1)}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+.top{flex-wrap:wrap}.top .btn{padding:9px 10px}
+.pet{position:relative;width:170px;height:170px;margin:8px auto;border-radius:20px;background:var(--bg);border:2px solid var(--line);overflow:hidden;line-height:1}
+.pet span{position:absolute;left:50%;transform:translateX(-50%)}
+.pet .bgs{font-size:150px;top:10px;opacity:.35}.pet .pb{font-size:84px;top:58px}.pet .ph{font-size:46px;top:16px}.pet .pf{font-size:36px;top:76px}.pet .po{font-size:40px;top:112px;left:78%}
+.shop{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:8px}
+.si{font:inherit;background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:8px 4px;cursor:pointer;color:var(--ink)}.si span{font-size:28px;display:block}.si small{font-size:.72rem;color:var(--mute)}.si.eq{border-color:var(--accent)}.si.lk{opacity:.55}
+.ga{position:relative;height:230px;background:var(--bg);border-radius:14px;overflow:hidden;margin:8px 0}
+.star{position:absolute;font-size:30px;background:none;border:0;cursor:pointer;padding:6px}
+.qb{margin-left:8px;padding:5px 12px;font-size:.85rem}
+#qa{white-space:pre-wrap;font-weight:600}.pts{text-align:center;font-weight:700}
+#ld::backdrop,#nd::backdrop{background:#000d;backdrop-filter:blur(12px)}
+#nw{margin-top:8px}
+#ad::backdrop{background:#000d;backdrop-filter:blur(12px)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#3ccf6a;margin-right:6px}.dot.off{background:#8a93ad}
+.pr{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:8px 0;border-bottom:1px solid var(--line)}.pr b{flex:1;min-width:80px}.pr .btn{font-size:.8rem;padding:5px 9px}
+#cm{height:240px;overflow:auto;background:var(--bg);border-radius:12px;padding:8px;margin:8px 0}
+.mg{margin:4px 0;padding:6px 10px;border-radius:12px;background:var(--card);max-width:80%;width:fit-content;word-break:break-word}.mg.me{margin-left:auto;background:var(--accent);color:#fff}
+#toasts{right:auto;bottom:auto;margin:0;border:0;padding:0;background:none;overflow:visible;color:inherit}
+#ntl{max-height:60vh;overflow:auto;margin-top:8px}
+.nt{display:flex;gap:10px;align-items:center;width:100%;text-align:left;font:inherit;color:var(--ink);background:none;border:0;border-bottom:1px solid var(--line);padding:10px 6px;cursor:pointer;border-radius:10px}
+.nt:hover{background:var(--bg)}.nt i{font-style:normal;font-size:24px;width:36px;text-align:center;flex:none}.nt div{flex:1;min-width:0}.nt b{display:block}.nt span{display:block;color:var(--mute);font-size:.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.nt small{color:var(--mute);font-size:.75rem;flex:none}
+.pw{position:relative}.pw input{padding-right:46px}.eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:0;font-size:20px;cursor:pointer;padding:4px 6px;line-height:1;color:var(--ink)}
+.chk{margin-top:8px}.chk .row{justify-content:flex-start;margin-top:6px}.ok{color:#0f9d7a;font-weight:700}.no{color:#c0392b;font-weight:700}
+#qfm{margin:0}
+.mg img{max-width:100%;max-height:200px;border-radius:8px;display:block;cursor:zoom-in;margin:2px 0}
+.mdel{background:none;border:0;cursor:pointer;font-size:.8rem;opacity:.5;margin-left:6px;padding:0 2px;color:inherit;vertical-align:middle}.mdel:hover,.mdel:focus{opacity:1}
+.lbr{display:flex;gap:10px;align-items:center;padding:9px 6px;border-bottom:1px solid var(--line)}.lbr i{font-style:normal;width:34px;text-align:center;font-weight:700;flex:none}.lbr b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}.lbr span{font-weight:700;color:var(--accent)}.lbr.mine{background:color-mix(in srgb,var(--accent) 12%,transparent);border-radius:10px}
+.nt.new{background:color-mix(in srgb,var(--accent) 12%,transparent)}.nt.new b::after{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-left:6px;vertical-align:middle}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+</head>
+<body>
+<header><div class="wrap">
+<div class="top"><h1 id="th">Revision</h1><select id="g1" aria-label="Grade"></select><button class="btn alt" id="nb" aria-label="Notifications">🔔</button><button class="btn alt" id="fb" aria-label="Friends">💬</button><button class="btn alt" id="me" aria-label="My pet and shop">🐾 0</button><button class="btn alt" id="tb" aria-label="Achievements">🏆</button><button class="btn alt" id="lb" aria-label="Leaderboard">🥇</button><button class="btn" id="add">+ Add</button></div>
+<input id="q" type="search" placeholder="Search anything…" aria-label="Search" autocomplete="off">
+<div class="chips" id="chips"></div>
+</div></header>
+<main><div class="wrap"><p class="count" id="count"></p><div id="list"></div></div></main>
+<dialog id="dlg"><form id="f">
+<h2>Add to revision</h2>
+<label>Grade<select id="g2"></select></label>
+<label>Subject (optional)<input id="sub" list="subs" placeholder="Leave empty and the app picks"></label><datalist id="subs"></datalist>
+<label>Topic name<input id="ttl" placeholder="e.g. Fractions"></label>
+<label>Notes<textarea id="txt" rows="5" placeholder="Type or paste text here"></textarea></label>
+<label>Screenshots<input id="pic" type="file" accept="image/*" multiple></label>
+<p class="hint">Leave Subject empty and the app picks the tab, or makes a new one. For screenshots only, pick a subject yourself. Tip: copy a screenshot, then press Cmd+V here.</p>
+<div id="pv"></div>
+<div class="row"><button type="button" id="x" class="btn alt">Cancel</button><button class="btn">Save</button></div>
+</form></dialog>
+<dialog id="tro"><h2>Achievements</h2><div id="tl"></div><div class="row"><button class="btn alt" id="tx">Close</button></div></dialog>
+<dialog id="ld"><form id="lf"><h2 id="lh"></h2><p id="lp"></p><input id="lw" type="password" minlength="4" maxlength="12" required autocomplete="off" placeholder="Password"><p class="hint" id="le"></p><p class="hint">Not you? Pick someone else:</p><div class="shop" id="lpp"></div><div class="row"><button type="button" class="btn alt" id="ln">+ New person</button><button class="btn">Unlock</button></div></form></dialog>
+<dialog id="nd"><form id="nf"><h2>Who is studying?</h2><p>Pick your name. Your notes, points and pet are saved only on this device, under your name. Nobody else sees your edits.</p><input id="nn" maxlength="16" placeholder="Your name" required><input id="nw" type="password" minlength="4" maxlength="12" placeholder="Make a password (4 to 12 characters)" required autocomplete="new-password"><p class="hint" id="ne"></p><div class="row"><button type="button" class="btn alt" id="nx">Cancel</button><button class="btn">Start</button></div></form></dialog>
+<dialog id="hub"><h2 id="hh"></h2><div class="pet" id="pet"></div><p class="pts" id="pts"></p><h3>Pets and shop</h3><div class="shop" id="shop"></div><select id="ps" hidden></select><div class="row"><button class="btn alt" id="np2">Log out</button><button class="btn alt" id="cpb">🔑 Change password</button><button class="btn" id="hx">Close</button></div></dialog>
+<dialog id="qd"><h2 id="qh"></h2><p id="qq"></p><form id="qfm"><input id="qi" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type your answer" aria-label="Your answer"><p class="hint" id="qfb"></p></form><p id="qa"></p><div class="row" id="qr"></div></dialog>
+<dialog id="gm"><h2>⭐ Star Catch</h2><p id="gs">Tap the stars for 15 seconds. 10 stars is a win!</p><p id="gt"></p><div class="ga" id="ga"></div><div class="row"><button class="btn alt" id="gx">Close</button><button class="btn" id="gp">Play</button></div></dialog>
+<dialog id="ad"><form id="af"><h2>Revision 📚</h2><p>Log in, or make an account. Pick your own name and a password (4 to 12 characters).</p><input id="an" maxlength="16" placeholder="Your name" autocomplete="username"><input id="ap" type="password" minlength="4" maxlength="12" placeholder="Password" autocomplete="current-password" style="margin-top:8px"><p class="hint" id="ae"></p><p class="hint">People already here (tap a name):</p><div class="shop" id="pl"></div><div class="row"><button type="button" class="btn alt" id="ac">Create account</button><button class="btn">Log in</button></div></form></dialog>
+<dialog id="fd"><h2>💬 Friends</h2><div id="fl"></div><div class="row"><button class="btn" id="fx">Close</button></div></dialog>
+<dialog id="cd"><h2 id="ch"></h2><div id="cm"></div><form id="cf"><input id="ct" maxlength="500" placeholder="Type a message, or paste a screenshot" autocomplete="off"><input id="cpic" type="file" accept="image/*" multiple hidden><div class="row"><button type="button" class="btn alt" id="cx">Back</button><button type="button" class="btn alt" id="cim" aria-label="Send a screenshot">📷 Screenshot</button><button class="btn">Send</button></div></form></dialog>
+<dialog id="iv"><img id="ivi" alt="screenshot" style="max-width:100%;display:block;border-radius:10px"><div class="row"><button class="btn" id="ivx">Close</button></div></dialog>
+<dialog id="cpd"><form id="cpf"><h2>🔑 Change password</h2><label>Old password<input id="cpo" type="password" maxlength="12" autocomplete="current-password" required></label><label>New password<input id="cp1" type="password" minlength="4" maxlength="12" autocomplete="new-password" required></label><label>New password again<input id="cp2" type="password" minlength="4" maxlength="12" autocomplete="new-password" required></label><p class="hint">4 to 12 characters.</p><p class="hint" id="cpe" aria-live="polite"></p><div class="row"><button type="button" class="btn alt" id="cpx">Cancel</button><button class="btn" id="cps">Change password</button></div></form></dialog>
+<dialog id="lbd"><h2>🥇 Leaderboard</h2><div class="chips" id="lbc"></div><div id="lbl"></div><div class="row"><button class="btn" id="lbx">Close</button></div></dialog>
+<dialog id="ntd"><h2>🔔 Notifications</h2><div id="ntl"></div><div class="row"><button class="btn alt" id="ntc">Clear all</button><button class="btn alt" id="ntr">Mark all read</button><button class="btn" id="ntx">Close</button></div></dialog>
+<div id="toasts" popover="manual" aria-live="polite"></div>
+<script type="module">
+const COL={Maths:"--maths",Science:"--science",History:"--history",Geography:"--geo",English:"--english",French:"--french"};
+const D=[
+["Maths","Equation of a line","Use y = mx + c.\nm is the gradient: (y₂ − y₁) ÷ (x₂ − x₁).\nc is where the line crosses the y-axis.","Line through (1, 3) and (3, 7). Find the equation.","m = (7 − 3) ÷ (3 − 1) = 2. Put in (1, 3): 3 = 2 + c, so c = 1. Answer: y = 2x + 1"],
+["Maths","Parallel lines","Parallel lines have the same gradient (same m) but a different c.","Line parallel to y = 3x + 2 through (0, 5)?","Same gradient 3. It crosses the y-axis at 5. Answer: y = 3x + 5"],
+["Maths","Systems of equations","Two equations, two unknowns.\nElimination: add or subtract the equations to remove one letter.\nSubstitution: swap one letter for what it equals.","Solve x + y = 10 and x − y = 2.","Add them: 2x = 12, so x = 6. Then y = 4."],
+["Maths","Cylinders","Volume = πr²h\nCurved surface = 2πrh\nTotal surface = 2πr² + 2πrh\nr is the radius (half the width), h is the height.","Cylinder r = 3 cm, h = 5 cm. Find the volume.","π × 3² × 5 = 45π ≈ 141.4 cm³"],
+["Maths","No-calculator tips","Show every step. Keep answers in terms of π if asked. Check by putting your answer back into the question."],
+["Science","Density","Density = mass ÷ volume.\nUnits: g/cm³ or kg/m³.\nAn object floats if it is less dense than the liquid.","Mass 200 g, volume 50 cm³. Density?","200 ÷ 50 = 4 g/cm³"],
+["Science","Pressure","Pressure = force ÷ area.\nUnit: pascal (Pa) = N/m².\nSmaller area means bigger pressure (that is why knives are sharp).","100 N pushes on 2 m². Pressure?","100 ÷ 2 = 50 Pa"],
+["Science","Torque and balance beams","Moment (torque) = force × distance from the pivot.\nA beam balances when clockwise moment = anticlockwise moment.","20 N is 3 m from the pivot. What force at 2 m balances it?","20 × 3 = 60. F × 2 = 60, so F = 30 N"],
+["Science","Heat transfer","Conduction: heat moves through touching particles (solids, metals best).\nConvection: warm liquid or gas rises, cool sinks (fluids only).\nRadiation: heat as waves, needs no particles (the Sun)."],
+["Science","Acids and bases","pH scale 0–14. Below 7 is acid, 7 is neutral, above 7 is alkali.\nAcid + alkali makes a salt + water (neutralisation)."],
+["Science","The rock cycle","Igneous: cooled magma or lava.\nSedimentary: layers of squashed sediment.\nMetamorphic: rock changed by heat and pressure.\nWeathering, erosion, melting and cooling link them in a cycle."],
+["History","Weimar Republic","Set up in 1919 after WW1.\nWeaknesses: blamed for the Treaty of Versailles, hyperinflation in 1923, and the Great Depression after 1929 put millions out of work. Many Germans lost trust in democracy."],
+["History","Hitler’s rise to power","1923: Beer Hall Putsch failed and he went to prison, wrote Mein Kampf.\nDepression made Nazi votes grow.\nJan 1933: made Chancellor.\nFeb 1933: Reichstag Fire.\nMar 1933: Enabling Act gave him power to make laws.\n1934: Hindenburg died and Hitler became Führer."],
+["History","Methods of Nazi control","Police state: Gestapo, SS, concentration camps, Nazi courts.\nPropaganda: Goebbels, radio, rallies, censorship.\nHitler Youth: trained boys and girls to obey.\nSchools: Nazi lessons and teachers had to join the party.\nWomen: told to focus on Kinder, Küche, Kirche (children, kitchen, church)."],
+["History","Nazi church policy","1933 Concordat: deal with the Catholic Church, but Nazis broke it.\nProtestants: Nazis backed the Reich Church (German Christians).\nPastor Niemöller led the Confessing Church against this and was arrested.\nNazis wanted loyalty to Hitler above God."],
+["History","Standard of living of German workers","Better: jobs from autobahns, rearmament and the Labour Service. Strength Through Joy gave cheap holidays.\nWorse: trade unions banned, workers had to join the DAF, long hours, low wages, and the figures hid Jewish people and women."],
+["History","PEEEL essay format","Point: answer the question.\nEvidence: give three pieces of evidence.\nExplain: say how it proves your point.\nEvaluate: how important was it?\nLink: connect back to the question."],
+["History","WW1: causes","MAIN: Militarism, Alliances, Imperialism, Nationalism.\nThe spark: Archduke Franz Ferdinand was assassinated on 28 June 1914."],
+["History","WW1: technology","Machine guns, tanks, poison gas, barbed wire, aircraft and U-boats (submarines). Defence was stronger than attack, so trench warfare dragged on."],
+["History","Treaty of Versailles 1919","War guilt clause: Germany took the blame.\nReparations: huge payments.\nLost land and colonies.\nArmy limited to 100,000, no air force.\nRhineland demilitarised.\nGermans called it a “diktat” (dictated peace)."],
+["History","Nazi propaganda","Goebbels ran it. Tools: radio (cheap People’s Receiver), posters, films, newspapers, rallies, and book burnings. Aim: make people love Hitler and hate Jewish people and enemies."],
+["Geography","Population","Birth rate − death rate = natural increase.\nPopulation grows when births are higher than deaths.\nMigration also changes it: people moving in or out."],
+["Geography","Urbanisation","More and more people living in cities.\nCause: rural-to-urban migration (jobs, schools, hospitals).\nProblems: slums, traffic, pollution.\nBenefits: jobs, services, and growth."],
+["Geography","Migration","Push factors: reasons to leave (war, no jobs, hunger, floods).\nPull factors: reasons to go (jobs, safety, schools, better life)."],
+["English","Argumentative essay","Intro: hook and your opinion.\nBody: reason + evidence + explain (repeat 3 times).\nCounter-argument: show the other side, then disagree with it.\nConclusion: sum up and finish strong."],
+["English","Comprehension tips","Read the questions first. Underline key words in the text. Answer in full sentences and use a short quote or detail as proof."],
+["English","The Giver","Theme: Sameness gives safety but removes choice, colour, love and memory. Jonas learns that real feelings and freedom matter more than comfort."],
+["French","Être and avoir (present)","être: je suis, tu es, il/elle est, nous sommes, vous êtes, ils/elles sont\navoir: j’ai, tu as, il/elle a, nous avons, vous avez, ils/elles ont"],
+["French","Passé composé","avoir (or être) + past participle.\nj’ai mangé = I ate\nelle est allée = she went\nNegative: ne … pas goes round the helper verb: je n’ai pas mangé."],
+["French","DELF reading tips","Read the questions first. Look for names, numbers and dates. Match words you know. Do not panic over unknown words: use the context. Answer in French only if the question asks."]
+];
+const FC={apiKey:"AIzaSyAMyRmCxkuFwrmYLAMAzXC6alukHcbBWSc",authDomain:"revision-app-d99dc.firebaseapp.com",projectId:"revision-app-d99dc",storageBucket:"revision-app-d99dc.firebasestorage.app",messagingSenderId:"253976583445",appId:"1:253976583445:web:7d9d52b5c246a3a2201d1c"};
+firebase.initializeApp(FC);
+const auth=firebase.auth(),db=firebase.firestore();
+const user=await new Promise(r=>{const u=auth.onAuthStateChanged(x=>{u();r(x)})});
+let PL=[];try{(await db.collection("users").get()).forEach(x=>PL.push({n:x.data().name,k:x.id}))}catch(e){console.log(e)}
+let me=null;const cloudIds=new Set();
+if(user){try{const d=db.collection("users").doc(user.uid),kk="rev-"+user.uid;
+const [pr,sd,nt]=await Promise.all([d.get(),d.collection("data").doc("state").get(),d.collection("notes").get()]);
+if(pr.exists){me={n:pr.data().name,k:kk};
+if(sd.exists){const v=sd.data();[["p","P"],["a","ach"],["n","N"],["g","grade"]].forEach(([a,b])=>{if(v[b]!=null)localStorage.setItem(kk+a,v[b])})}
+const arr=[];nt.forEach(x=>{arr.push(x.data());cloudIds.add(x.id)});localStorage.setItem(kk,JSON.stringify(arr))}}catch(e){console.log(e)}}
+const K=me?me.k:"rev-v1";
+let un=!!me;
+let P={pts:0,tot:0,wins:0,quiz:0,own:["🐱","🐶","🐲","🦊","🐼"],eq:{pet:"🐱",hat:"",face:"",hold:"",bg:""}};
+try{Object.assign(P,JSON.parse(localStorage.getItem(K+"p")||"{}"))}catch(e){}
+let U=[];try{U=JSON.parse(localStorage.getItem(K)||"[]")}catch(e){}
+let grade=9;try{grade=+localStorage.getItem(K+"g")||9}catch(e){}
+let cat="All";
+const PAL=["--maths","--science","--history","--geo","--english","--french"];
+function save(){try{localStorage.setItem(K,JSON.stringify(U));return true}catch(e){alert("Storage is full. Delete some screenshots first.");return false}}
+function all(g=grade){return [...D.map(d=>[d[0],d[1],d[2],d[3]||"",d[4]||"",[],0,9]),...U.map(u=>[u.cat,u.title,u.body,"","",u.imgs||[],u.id,u.grade])].filter(d=>d[7]===g)}
+function catsNow(){return ["All",...new Set(all().map(d=>d[0]))]}
+const $=id=>document.getElementById(id);
+function colorOf(c){const k=COL[c]||PAL[[...c].reduce((a,ch)=>a+ch.charCodeAt(0),0)%6];return `var(${k})`}
+function hi(t,q){
+  const e=t.replace(/[&<>]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[m]));
+  if(!q)return e;
+  const re=new RegExp("("+q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","gi");
+  return e.replace(re,"<mark>$1</mark>");
+}
+function render(){
+  const q=$("q").value.trim();
+  const low=q.toLowerCase();
+  const items=all().filter(d=>(cat==="All"||d[0]===cat)&&(!low||d.join(" ").toLowerCase().includes(low)));
+  $("count").innerHTML=items.length+(items.length===1?" topic":" topics")+(items.length?` <button class="btn qb" id="qz">🎯 Quiz ${cat==="All"?"me":esc(cat)}</button>`:"");
+  $("list").innerHTML=items.length?items.map(d=>{
+    const paras=d[2]?d[2].split("\n").map(p=>"<p>"+hi(p,q)+"</p>").join(""):"";
+    const tr=d[3]?`<div class="try"><details><summary>Try it</summary><p>${hi(d[3],q)}</p><details><summary>Show answer</summary><p class="ans">${hi(d[4],q)}</p></details></details></div>`:"";
+    return `<details style="--c:${colorOf(d[0])}"${low?" open":""}><summary>${hi(d[1],q)}<small>${d[0]}</small></summary><div class="body">${paras}${d[5].map(s=>`<img src="${s}" alt="screenshot">`).join("")}${tr}${d[6]?`<button class="del" data-id="${d[6]}">Delete</button>`:""}</div></details>`;
+  }).join(""):`<p class="empty">Nothing here yet. Try another word, or tap + Add.</p>`;
+}
+function chips(){
+  $("chips").innerHTML=catsNow().map(c=>`<button class="chip" style="--c:${c==="All"?"var(--accent)":colorOf(c)}" aria-pressed="${c===cat}" data-c="${c}">${c}</button>`).join("");
+}
+$("chips").onclick=e=>{const b=e.target.closest(".chip");if(!b)return;cat=b.dataset.c;chips();render();};
+$("q").oninput=()=>{if($("q").value.trim().length>=2)earn("search");render()};
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+const STOP=new Set("this that with from have there their about which would could what when where your will been were they them then than also into some more most only just like such very much many each other because these those while after before being does done make made".split(" "));
+const KW={Maths:"equation gradient fraction algebra triangle angle cylinder volume area graph solve number simplify expand factorise coordinate probability percentage ratio circle perimeter geometry".split(" "),Science:"density pressure force atom acid energy cell chemical heat reaction element compound mass speed electric biology physics chemistry molecule gravity rock magnet".split(" "),History:"war hitler nazi treaty germany weimar empire king revolution battle government propaganda century".split(" "),Geography:"population migration city climate river urban rural earthquake volcano rainfall country".split(" "),English:"essay poem novel paragraph character theme author writing comprehension story metaphor".split(" "),French:"french français bonjour avoir être verbe passé nous vous mais avec dans pour".split(" ")};
+function toks(t){return (t.toLowerCase().match(/[a-zà-ÿ]{3,}/g)||[]).filter(w=>!STOP.has(w))}
+function autoCat(g,text){const w=new Set(toks(text));if(!w.size)return null;const sc={};const add=(c,s)=>{sc[c]=(sc[c]||0)+s};
+for(const c in KW)for(const k of KW[c])if(w.has(k))add(c,3);
+all(g).forEach(d=>{const t=new Set(toks(d[0]+" "+d[1]+" "+d[2]));let n=0;w.forEach(x=>{if(t.has(x))n++});if(n)add(d[0],n)});
+let best=null,b=2;for(const c in sc)if(sc[c]>b){b=sc[c];best=c}return best}
+const AC={first:["📝","First Notes","Add your first topic"],pic:["📸","Snapshot","Add a screenshot"],new:["🌱","New Territory","Make a new tab"],tabs:["🗂️","Organiser","Have 3 tabs of your own"],five:["📚","Bookworm","Add 5 topics"],ans:["🧠","Big Brain","Reveal your first answer"],ten:["🔥","On Fire","Reveal 10 answers"],open:["📖","Curious","Open 10 topics"],search:["🔍","Detective","Use the search bar"],grade:["🎓","Level Up","Switch to another grade"],quiz1:["🎯","Quiz Rookie","Finish a quiz"],quiz5:["🏅","Quiz Master","Finish 5 quizzes"],perfect:["💯","Flawless","Get a whole quiz right"],rich:["💰","Saver","Earn 100 points"],shop1:["🛍️","Shopper","Buy your first item"],shop5:["👗","Fashionista","Buy 5 items"],dress:["🎀","Dress Up","Put an item on your pet"],win1:["🥇","First Win","Win the secret game"],win5:["👑","Champion","Win the secret game 5 times"],star15:["🌠","Sharpshooter","Catch 15 stars in one game"],secret:["🕵️","Secret Finder","Find the hidden game"],open25:["🔖","Page Turner","Open 25 topics"],ans25:["🤖","Answer Machine","Reveal 25 answers"],name:["👋","Hello There","Pick your name"],pts50:["🪙","Pocket Money","Earn 50 points"],pts250:["💎","Rich Kid","Earn 250 points"],pts500:["🏦","Tycoon","Earn 500 points"],pts1000:["🚀","Legend","Earn 1000 points"],topics10:["🗃️","Library","Add 10 topics"],topics20:["🏛️","Archive","Add 20 topics"],pics5:["📷","Photographer","Add 5 screenshots"],pics15:["🖼️","Gallery","Add 15 screenshots"],tabs5:["📑","Tab Collector","Have 5 tabs of your own"],open50:["🧭","Explorer","Open 50 topics"],open100:["🎒","Scholar","Open 100 topics"],ans50:["🔮","Mind Reader","Reveal 50 answers"],ans100:["🧬","Genius","Reveal 100 answers"],quiz10:["🎲","Quiz Addict","Finish 10 quizzes"],quiz25:["🎖️","Quiz Legend","Finish 25 quizzes"],right25:["✅","Sharp Mind","Get 25 quiz answers right"],right100:["⚡","Brain Power","Get 100 quiz answers right"],wins10:["🌟","Star Hunter","Win the secret game 10 times"],wins25:["☄️","Star Legend","Win the secret game 25 times"],shop10:["🧺","Collector","Buy 10 items"],shopall:["🏰","Own It All","Own every shop item"],dressed:["🧥","Fully Dressed","Fill every pet slot"],unicorn:["🦄","Unicorn Rider","Unlock the unicorn"],royal:["👸","Royalty","Buy the crown"],grade10:["🔟","Double Digits","Switch to Grade 10 or higher"],traveller:["⏳","Time Traveller","Add topics in 2 different grades"],squad:["🤝","Squad","Have 2 people on one device"],ach10:["🎗️","Trophy Hunter","Earn 10 achievements"],ach20:["🥳","Overachiever","Earn 20 achievements"],ach30:["🌠","Completionist","Earn 30 achievements"],early:["🌅","Early Bird","Study before 8am"],night:["🦉","Night Owl","Study after 9pm"],weekend:["🛋️","Weekend Warrior","Study on a weekend"],streak3:["🔥","3 Day Streak","Visit 3 days in a row"],streak7:["☀️","7 Day Streak","Visit 7 days in a row"],streak14:["🌋","14 Day Streak","Visit 14 days in a row"],days10:["📆","Regular","Visit on 10 different days"],essay:["✍️","Essay Writer","Add a note 500 letters long"],friend1:["😎","Social Butterfly","Make a friend"],chat1:["💬","Chatterbox","Send a message"],mute1:["🔇","Peace and Quiet","Mute someone"]};
+function sweep(){const T=P.tot||0,nu=U.length,im=U.reduce((a,u)=>a+(u.imgs||[]).length,0),tb=new Set(U.map(u=>u.cat)).size,ac=Object.keys(ach).length,dt=new Date(),h=dt.getHours(),dw=dt.getDay(),ds=new Set(P.days||[]),r=P.right||0;
+let sk=0;const d=new Date();while(ds.has(d.toLocaleDateString("en-CA"))){sk++;d.setDate(d.getDate()-1)}
+const c={pts50:T>=50,pts250:T>=250,pts500:T>=500,pts1000:T>=1000,topics10:nu>=10,topics20:nu>=20,pics5:im>=5,pics15:im>=15,tabs5:tb>=5,open50:N.open>=50,open100:N.open>=100,ans50:N.ans>=50,ans100:N.ans>=100,quiz10:P.quiz>=10,quiz25:P.quiz>=25,right25:r>=25,right100:r>=100,wins10:P.wins>=10,wins25:P.wins>=25,shop10:P.own.length>=15,shopall:P.own.length>=IT.length,dressed:["hat","face","hold","bg"].every(s=>P.eq[s]),unicorn:P.own.includes("🦄"),royal:P.own.includes("👑"),grade10:grade>=10,traveller:new Set(U.map(u=>u.grade)).size>=2,squad:PL.length>=2,ach10:ac>=10,ach20:ac>=20,ach30:ac>=30,early:h<8,night:h>=21,weekend:dw===0||dw===6,streak3:sk>=3,streak7:sk>=7,streak14:sk>=14,days10:(P.days||[]).length>=10,essay:U.some(u=>(u.body||"").length>=500)};
+for(const k in c)if(c[k])earn(k)}
+let ach={},N={ans:0,open:0};
+try{ach=JSON.parse(localStorage.getItem(K+"a")||"{}");N=JSON.parse(localStorage.getItem(K+"n")||'{"ans":0,"open":0}')}catch(e){}
+function st(){try{localStorage.setItem(K+"a",JSON.stringify(ach));localStorage.setItem(K+"n",JSON.stringify(N))}catch(e){}}
+const Q=[];let busy=false;
+function toast(i,h,t){Q.push([i,h,t]);if(!busy)nxt()}
+function nxt(){const q=Q.shift();if(!q){busy=false;return}busy=true;try{const b=$("toasts");b.hidePopover();b.showPopover()}catch(e){}const e=document.createElement("div");e.className="toast";e.innerHTML=`<i>${q[0]}</i><div><b>${q[1]}</b><span>${esc(q[2])}</span></div>`;$("toasts").appendChild(e);requestAnimationFrame(()=>requestAnimationFrame(()=>e.classList.add("in")));setTimeout(()=>{e.classList.remove("in");setTimeout(()=>{e.remove();nxt()},500)},3200)}
+function earn(id){if(ach[id])return;ach[id]=1;st();const a=AC[id];toast(a[0],"Advancement Made!",a[1]+" +20⭐");pay(20)}
+function after(nw,sub,im){pay(10);toast(nw?"🆕":"📥",nw?"New tab made!":"Saved!","Added to "+sub);earn("first");if(im)earn("pic");if(nw)earn("new");if(U.length>=5)earn("five");if(new Set(U.map(u=>u.cat)).size>=3)earn("tabs")}
+$("list").addEventListener("click",e=>{const s=e.target.closest("summary");if(!s||s.parentElement.open)return;if(s.textContent==="Show answer"){N.ans++;earn("ans");pay(1);if(N.ans>=10)earn("ten");if(N.ans>=25)earn("ans25")}else if(!s.closest(".try")){N.open++;if(N.open>=10)earn("open");if(N.open>=25)earn("open25")}st();sweep()});
+$("tb").onclick=()=>{$("tl").innerHTML=Object.entries(AC).map(([k,a])=>`<div class="tr${ach[k]?"":" lock"}"><i>${a[0]}</i><div><b>${a[1]}</b><br><small>${a[2]}</small></div></div>`).join("");$("tro").showModal()};$("tx").onclick=()=>$("tro").close();
+const IT=[["🐱","pet",0,0],["🐶","pet",0,0],["🐲","pet",0,0],["🦊","pet",0,0],["🐼","pet",0,0],["🦄","pet",100,5],["🎩","hat",20,0],["🧢","hat",15,0],["🎓","hat",30,0],["🤠","hat",40,1],["👑","hat",60,3],["🕶️","face",25,0],["🤓","face",30,0],["🥸","face",40,1],["📚","hold",10,0],["🍕","hold",15,0],["⚽","hold",20,0],["🗡️","hold",45,2],["🪄","hold",80,5],["🌈","bg",30,0],["🏖️","bg",40,0],["🌌","bg",50,2],["🌋","bg",70,4]];
+function sp(){try{localStorage.setItem(K+"p",JSON.stringify(P))}catch(e){}}
+function upd(){$("me").textContent="🐾 "+P.pts}
+function pay(n){P.pts+=n;P.tot=(P.tot||0)+n;sp();if(P.tot>=100)earn("rich");upd();sweep()}
+function hub(){const e=P.eq;$("pet").innerHTML=`<span class="bgs">${e.bg}</span><span class="pb">${e.pet}</span><span class="ph">${e.hat}</span><span class="pf">${e.face}</span><span class="po">${e.hold}</span>`;
+$("pts").textContent=`⭐ ${P.pts} points · 🎮 ${P.wins} wins · 🏆 ${Object.keys(ach).length}/${Object.keys(AC).length}`;
+$("shop").innerHTML=IT.map(([i,s,p,w])=>{const own=P.own.includes(i),on=P.eq[s]===i,lk=!own&&P.wins<w;return `<button class="si${on?" eq":""}${lk?" lk":""}" data-i="${i}"><span>${i}</span><small>${own?(on?"On":"Equip"):lk?"🔒 "+w+" wins":"⭐"+p}</small></button>`}).join("");
+$("ps").innerHTML=PL.map(p=>`<option value="${esc(p.k)}"${me&&p.k===me.k?" selected":""}>${esc(p.n)}</option>`).join("")}
+$("me").onclick=()=>{$("hh").textContent="Hi "+(me?me.n:"")+" 👋";hub();$("hub").showModal()};$("hx").onclick=()=>$("hub").close();
+$("shop").onclick=e=>{const b=e.target.closest(".si");if(!b)return;const [i,s,p,w]=IT.find(x=>x[0]===b.dataset.i);
+if(!P.own.includes(i)){if(P.wins<w){toast("🔒","Locked","Win "+w+" star games. Find the secret game!");return}if(P.pts<p){toast("⭐","Not enough points","You need "+p);return}P.pts-=p;P.own.push(i);earn("shop1");if(P.own.length>=10)earn("shop5")}
+if(s==="pet")P.eq.pet=i;else{P.eq[s]=P.eq[s]===i?"":i;if(P.eq[s])earn("dress")}
+sp();upd();sweep();hub()};
+$("ps").onchange=e=>{try{localStorage.setItem("rev-who",e.target.value)}catch(x){}location.reload()};
+$("np2").onclick=()=>{auth.signOut().then(()=>location.reload())};$("nx").onclick=()=>{$("nd").close();if(me&&!un)lock()};
+$("nf").onsubmit=async e=>{e.preventDefault();const n=$("nn").value.trim(),w=$("nw").value;if(!n)return;
+if(w.length<4||w.length>12){$("ne").textContent="Password must be 4 to 12 characters.";return}
+if(PL.some(p=>p.n.toLowerCase()===n.toLowerCase())){$("ne").textContent="That name is taken. Pick another.";return}
+const k=PL.length?"rev-v1-"+Date.now():"rev-v1",s=Math.random().toString(36).slice(2);
+PL.push({n,k,s,h:await hx(s,w)});savePL();try{localStorage.setItem("rev-who",k);sessionStorage.setItem("rev-ok",k)}catch(x){}location.reload()};
+$("nd").oncancel=e=>{if(!me||!un)e.preventDefault()};
+let QZ=null;
+function quiz(){const items=all().filter(d=>cat==="All"||d[0]===cat);if(!items.length)return;
+const qs=items.map(d=>d[3]?[d[3],d[4]]:["What do you remember about “"+d[1]+"”?",d[2]||"(check your screenshot)"]).sort(()=>Math.random()-.5).slice(0,5);
+QZ={qs,i:0,s:0};$("qh").textContent="🎯 Quiz: "+(cat==="All"?"everything":cat);qn();$("qd").showModal()}
+function qn(){if(QZ.i>=QZ.qs.length)return qend();const q=QZ.qs[QZ.i];$("qq").textContent=(QZ.i+1)+"/"+QZ.qs.length+"  "+q[0];$("qa").textContent="";$("qr").innerHTML='<button class="btn" id="qs">Show answer</button>';
+$("qs").onclick=()=>{$("qa").textContent=q[1];$("qr").innerHTML='<button class="btn alt" id="qn">Not yet</button><button class="btn" id="qg">Got it ✅</button>';$("qn").onclick=()=>{QZ.i++;qn()};$("qg").onclick=()=>{QZ.s++;P.right=(P.right||0)+1;pay(5);QZ.i++;qn()}}}
+function qend(){const n=QZ.qs.length;$("qq").textContent="Done! You got "+QZ.s+" of "+n+".";$("qa").textContent="";if(QZ.s===n&&n>=3){$("qa").textContent="Perfect! +10 bonus";pay(10);earn("perfect")}
+P.quiz=(P.quiz||0)+1;sp();earn("quiz1");if(P.quiz>=5)earn("quiz5");$("qr").innerHTML='<button class="btn" id="qc">Close</button>';$("qc").onclick=()=>$("qd").close()}
+$("count").onclick=e=>{if(e.target.closest("#qz"))quiz()};
+let gi=null;
+$("gp").onclick=()=>{if(gi)return;let s=0,t=15;const a=$("ga");a.innerHTML="";$("gs").textContent="Go go go!";$("gt").textContent="15s ⭐0";
+const sn=()=>{if(t<=0)return;const e=document.createElement("button");e.className="star";e.textContent="⭐";e.setAttribute("aria-label","star");e.style.left=Math.random()*80+"%";e.style.top=Math.random()*75+"%";e.onclick=()=>{s++;e.remove();$("gt").textContent=t+"s ⭐"+s};a.appendChild(e);setTimeout(()=>e.remove(),950);setTimeout(sn,450+Math.random()*250)};sn();
+gi=setInterval(()=>{t--;$("gt").textContent=t+"s ⭐"+s;if(t<=0){clearInterval(gi);gi=null;pay(s*2);const w=s>=10;if(w){P.wins++;earn("win1");if(P.wins>=5)earn("win5")}if(s>=15)earn("star15");sp();$("gs").textContent=w?"You won! +"+s*2+" points. Wins: "+P.wins:"You got "+s+". You need 10 to win. +"+s*2+" points";a.innerHTML=""}},1000)};
+$("gx").onclick=()=>$("gm").close();$("gm").onclose=()=>{clearInterval(gi);gi=null};
+let tp=0,tm;$("th").onclick=()=>{tp++;clearTimeout(tm);tm=setTimeout(()=>{tp=0},1500);if(tp>=5){tp=0;earn("secret");$("gs").textContent="Tap the stars for 15 seconds. 10 stars is a win!";$("gm").showModal()}};
+async function hx(s,p){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s+p));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+function savePL(){try{localStorage.setItem("rev-p",JSON.stringify(PL))}catch(e){}}
+function lock(){$("lh").textContent="Hi "+me.n+" 👋";$("lp").textContent=me.h?"Enter your password.":"Create a password (4 to 12 characters).";$("lw").value="";$("le").textContent="";
+$("lpp").innerHTML=PL.filter(p=>p.k!==me.k).map(p=>`<button type="button" class="si" data-k="${esc(p.k)}"><span>👤</span><small>${esc(p.n)}</small></button>`).join("");$("ld").showModal()}
+$("lf").onsubmit=async e=>{e.preventDefault();const w=$("lw").value;if(w.length<4||w.length>12){$("le").textContent="Use 4 to 12 characters.";return}
+if(!me.h){me.s=Math.random().toString(36).slice(2);me.h=await hx(me.s,w);savePL()}else if(await hx(me.s,w)!==me.h){$("le").textContent="Wrong password. Try again.";return}
+try{sessionStorage.setItem("rev-ok",me.k)}catch(x){}un=true;$("ld").close();start()};
+$("ld").oncancel=e=>e.preventDefault();
+$("lpp").onclick=e=>{const b=e.target.closest("[data-k]");if(!b)return;try{localStorage.setItem("rev-who",b.dataset.k)}catch(x){}location.reload()};
+$("ln").onclick=()=>{$("ld").close();$("nd").showModal()};
+const GR=[7,8,9,10,11,12].map(g=>`<option value="${g}">Grade ${g}</option>`).join("");
+$("g1").innerHTML=GR;$("g2").innerHTML=GR;$("g1").value=grade;
+$("g1").onchange=e=>{earn("grade");grade=+e.target.value;sweep();cat="All";try{localStorage.setItem(K+"g",grade)}catch(x){}chips();render()};
+const dlg=$("dlg"),F=$("f");let pend=[];
+function shrink(file){return new Promise(r=>{const i=new Image,u=URL.createObjectURL(file);i.onload=()=>{const s=Math.min(1,900/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=i.width*s;c.height=i.height*s;c.getContext("2d").drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);r(c.toDataURL("image/jpeg",.6))};i.src=u})}
+async function addFiles(fs){for(const f of fs)if(f.type.startsWith("image/"))pend.push(await shrink(f));$("pv").innerHTML=pend.map(s=>`<img src="${s}" alt="">`).join("")}
+$("add").onclick=()=>{pend=[];F.reset();$("pv").innerHTML="";$("g2").value=grade;
+$("subs").innerHTML=[...new Set([...Object.keys(COL),...U.map(u=>u.cat)])].map(c=>`<option value="${c.replace(/"/g,"&quot;")}">`).join("");dlg.showModal()};
+$("x").onclick=()=>dlg.close();
+$("pic").onchange=e=>addFiles(e.target.files);
+dlg.addEventListener("paste",e=>addFiles([...e.clipboardData.files]));
+F.onsubmit=e=>{e.preventDefault();
+let sub=$("sub").value.trim();const body=$("txt").value.trim();
+if(!body&&!pend.length){alert("Add some text or a screenshot.");return}
+const g0=+$("g2").value,tt=$("ttl").value.trim();
+if(!sub)sub=autoCat(g0,tt+" "+body)||((body||tt)?(tt||body.split(/\s+/).slice(0,2).join(" ")).slice(0,24):"Screenshots");
+const isNew=!all(g0).some(d=>d[0].toLowerCase()===sub.toLowerCase());
+const known=[...Object.keys(COL),...U.map(u=>u.cat)].find(c=>c.toLowerCase()===sub.toLowerCase());if(known)sub=known;
+const title=$("ttl").value.trim()||(body?body.slice(0,40):"Screenshot");
+const g=+$("g2").value;
+U.push({id:Date.now()+"",grade:g,cat:sub,title,body,imgs:pend});
+if(!save()){U.pop();return}
+grade=g;try{localStorage.setItem(K+"g",grade)}catch(x){}$("g1").value=grade;cat=sub;dlg.close();chips();render();after(isNew,sub,pend.length)};
+$("list").onclick=e=>{const b=e.target.closest(".del");if(!b||!confirm("Delete this?"))return;U=U.filter(u=>u.id!==b.dataset.id);save();chips();render()};
+chips();render();upd();$("nx").hidden=!me;const start=()=>{const td=new Date().toLocaleDateString("en-CA");P.days=P.days||[];if(!P.days.includes(td))P.days=[...P.days,td].slice(-60);sp();earn("name");sweep()};
+const em=n=>n.toLowerCase().replace(/[^a-z0-9]/g,"")+"@users.example.com";
+const pwd=p=>p+"_rv1";
+function showAuth(){$("pl").innerHTML=PL.map(p=>`<button type="button" class="si" data-n="${esc(p.n)}"><span>👤</span><small>${esc(p.n)}</small></button>`).join("");$("ad").showModal()}
+$("pl").onclick=e=>{const b=e.target.closest("[data-n]");if(b)$("an").value=b.dataset.n};
+$("ad").oncancel=e=>e.preventDefault();
+async function go(create){const n=$("an").value.trim(),p=$("ap").value,er=$("ae");er.textContent="";
+if(!em(n).split("@")[0]){er.textContent="Use letters or numbers in your name.";return}
+if(p.length<4||p.length>12){er.textContent="Password must be 4 to 12 characters.";return}
+try{if(create){if(PL.some(x=>x.n.toLowerCase()===n.toLowerCase())){er.textContent="That name is taken. Pick another.";return}
+const c=await auth.createUserWithEmailAndPassword(em(n),pwd(p));await db.collection("users").doc(c.user.uid).set({name:n,created:Date.now()})}
+else await auth.signInWithEmailAndPassword(em(n),pwd(p));
+location.reload()}catch(e){const c=e.code||"";er.textContent=c==="auth/email-already-in-use"?"That name is taken. Pick another.":/invalid-credential|wrong-password|user-not-found/.test(c)?"Wrong name or password.":"Something went wrong ("+c+")."}}
+$("af").onsubmit=e=>{e.preventDefault();go(false)};$("ac").onclick=()=>go(true);
+let pt;function push(){if(!me||!user)return;clearTimeout(pt);pt=setTimeout(async()=>{try{const d=db.collection("users").doc(user.uid),g=k=>localStorage.getItem(K+k)||"";
+await d.collection("data").doc("state").set({P:g("p"),ach:g("a"),N:g("n"),grade:g("g")});
+const ids=new Set(U.map(u=>u.id));
+for(const u of U)if(!cloudIds.has(u.id)){await d.collection("notes").doc(u.id).set(u);cloudIds.add(u.id)}
+for(const id of [...cloudIds])if(!ids.has(id)){await d.collection("notes").doc(id).delete();cloudIds.delete(id)}}catch(e){console.log(e)}},1200)}
+const _sp=sp,_st=st,_sv=save;sp=()=>{_sp();push()};st=()=>{_st();push()};save=()=>{const r=_sv();if(r)push();return r};
+let USERS={},FR=[],cid=null,unsub=null;
+const fid=(a,b)=>[a,b].sort().join("_");
+const nm=u=>esc((USERS[u]||{}).name||"Someone");
+const onl=u=>Date.now()-((USERS[u]||{}).seen||0)<100000;
+const dot=u=>`<span class="dot${onl(u)?"":" off"}"></span>`;
+function badge(){if(!me)return;const mu=P.mute||[];const n=FR.filter(f=>f.status==="pending"&&f.from!==user.uid&&!mu.includes(f.from)).length;$("fb").textContent="💬"+(n?" "+n:"")}
+function render2(){if(!$("fd").open)return;const mu=P.mute||[],o=f=>f.m.find(x=>x!==user.uid);
+const inc=FR.filter(f=>f.status==="pending"&&f.from!==user.uid&&!mu.includes(f.from)),out=FR.filter(f=>f.status==="pending"&&f.from===user.uid),fr=FR.filter(f=>f.status==="accepted");
+let h="";
+if(inc.length)h+="<h3>Requests</h3>"+inc.map(f=>`<div class="pr">${dot(f.from)}<b>${nm(f.from)}</b><button class="btn" data-a="ok" data-i="${f.id}">Accept</button><button class="btn alt" data-a="no" data-i="${f.id}">Decline</button></div>`).join("");
+h+="<h3>Friends</h3>"+(fr.length?fr.map(f=>{const u=o(f),m=mu.includes(u);return `<div class="pr">${dot(u)}<b>${nm(u)}${m?" 🔇":""}</b><button class="btn" data-a="chat" data-u="${u}" data-i="${f.id}">Chat</button><button class="btn alt" data-a="mute" data-u="${u}">${m?"Unmute":"Mute"}</button><button class="btn alt" data-a="rm" data-i="${f.id}">Remove</button></div>`}).join(""):"<p class='hint'>No friends yet. Add someone below.</p>");
+h+=out.map(f=>`<div class="pr">${dot(o(f))}<b>${nm(o(f))}</b><span class="hint">waiting…</span><button class="btn alt" data-a="rm" data-i="${f.id}">Cancel</button></div>`).join("");
+const rest=Object.keys(USERS).filter(u=>u!==user.uid&&!FR.some(f=>f.m.includes(u)));
+h+="<h3>Everyone else</h3>"+(rest.length?rest.map(u=>{const m=mu.includes(u);return `<div class="pr">${dot(u)}<b>${nm(u)}${m?" 🔇":""}</b><button class="btn" data-a="add" data-u="${u}">Add</button><button class="btn alt" data-a="mute" data-u="${u}">${m?"Unmute":"Mute"}</button></div>`}).join(""):"<p class='hint'>Nobody else yet.</p>");
+if("Notification"in window&&Notification.permission==="default")h="<div class='row'><button class='btn' data-a='bell'>🔔 Turn on notifications</button></div>"+h;
+$("fl").innerHTML=h}
+if(me){const ud=db.collection("users").doc(user.uid),beat=()=>{ud.update({seen:Date.now()}).catch(()=>{})};beat();setInterval(beat,45000);setInterval(render2,30000);
+db.collection("users").onSnapshot(q=>{USERS={};q.forEach(x=>{USERS[x.id]=x.data()});render2()},e=>console.log(e));
+let fr0=true;db.collection("friendships").where("m","array-contains",user.uid).onSnapshot(q=>{FR=[];q.forEach(x=>FR.push({id:x.id,...x.data()}));
+q.docChanges().forEach(c=>{const f=c.doc.data(),mu=P.mute||[],o=f.m.find(x=>x!==user.uid);if(mu.includes(o))return;
+if(c.type==="added"&&f.status==="pending"&&f.from!==user.uid)addN("rq_"+c.doc.id+"_"+(f.t||0),"🤝","Friend request",rn(o)+" wants to be your friend",{c:"fr"},fr0);
+else if(!fr0&&c.type==="modified"&&f.status==="accepted"&&f.from===user.uid)addN("ac_"+c.doc.id,"🎉","Request accepted",rn(o)+" accepted your friend request",{c:"chat",u:o,i:c.doc.id})});
+fr0=false;watchMsgs();if(FR.some(f=>f.status==="accepted"))earn("friend1");badge();render2()},e=>console.log(e))}
+const rn=u=>(USERS[u]||{}).name||"Someone";
+function notify(i,h,t){toast(i,esc(h),t);try{if(document.hidden&&"Notification"in window&&Notification.permission==="granted")new Notification(h,{body:t})}catch(e){}}
+const MW={},T0=Date.now(),NK="rev-nt-"+(user?user.uid:""),SK="rev-ns-"+(user?user.uid:""),LS=+localStorage.getItem(SK)||T0;
+let NT=[];try{NT=JSON.parse(localStorage.getItem(NK)||"[]")}catch(e){}
+const seen=()=>{if(me)localStorage.setItem(SK,String(Date.now()))};setInterval(seen,30000);addEventListener("pagehide",seen);document.addEventListener("visibilitychange",seen);
+function saveN(){NT=NT.slice(0,50);localStorage.setItem(NK,JSON.stringify(NT));nbadge();renderN()}
+function nbadge(){const n=NT.filter(x=>!x.r).length;$("nb").textContent="🔔"+(n?" "+n:"")}
+function addN(id,i,h,t,a,quiet){if(NT.some(x=>x.id===id))return;NT.unshift({id,i,h,t,a,at:Date.now(),r:0});saveN();if(!quiet)notify(i,h,t)}
+function readN(f){let c=0;NT.forEach(x=>{if(!x.r&&f(x)){x.r=1;c++}});if(c)saveN()}
+const ago=t=>{const s=(Date.now()-t)/1000;return s<60?"now":s<3600?Math.floor(s/60)+"m":s<86400?Math.floor(s/3600)+"h":Math.floor(s/86400)+"d"};
+function renderN(){if(!$("ntd").open)return;$("ntl").innerHTML=NT.length?NT.map((x,k)=>`<button class="nt${x.r?"":" new"}" data-k="${k}"><i>${x.i}</i><div><b>${esc(x.h)}</b><span>${esc(x.t)}</span></div><small>${ago(x.at)}</small></button>`).join(""):"<p class='hint'>No notifications yet. Friend requests and messages show up here.</p>"}
+nbadge();
+$("nb").onclick=()=>{if(!me)return;$("ntd").showModal();renderN()};$("ntx").onclick=()=>$("ntd").close();
+$("ntr").onclick=()=>readN(()=>1);$("ntc").onclick=()=>{NT=[];saveN()};
+$("ntl").onclick=e=>{const b=e.target.closest("[data-k]");if(!b)return;const x=NT[+b.dataset.k];if(!x)return;x.r=1;saveN();$("ntd").close();
+if(x.a&&x.a.c==="chat"&&FR.some(f=>f.id===x.a.i&&f.status==="accepted"))openChat(x.a.u,x.a.i);else{$("fd").showModal();render2()}};
+function watchMsgs(){const ok=new Set(FR.filter(f=>f.status==="accepted").map(f=>f.id));
+for(const id in MW)if(!ok.has(id)){MW[id]();delete MW[id]}
+for(const id of ok)if(!MW[id])MW[id]=db.collection("chats").doc(id).collection("msgs").where("t",">",LS).onSnapshot(q=>q.docChanges().forEach(c=>{if(c.type!=="added")return;const m=c.doc.data();
+if(m.from===user.uid||(P.mute||[]).includes(m.from)||(cid===id&&$("cd").open&&!document.hidden))return;
+addN("m_"+c.doc.id,"💬",rn(m.from),m.text.length>80?m.text.slice(0,80)+"…":m.text,{c:"chat",u:m.from,i:id},m.t<=T0)}),e=>console.log(e))}
+$("fb").onclick=()=>{if(!me)return;$("fd").showModal();render2();readN(x=>x.a&&x.a.c==="fr")};$("fx").onclick=()=>$("fd").close();
+$("fl").onclick=async e=>{const b=e.target.closest("[data-a]");if(!b)return;const a=b.dataset.a,u=b.dataset.u,i=b.dataset.i,fs=db.collection("friendships");
+try{if(a==="add")await fs.doc(fid(user.uid,u)).set({m:[user.uid,u],from:user.uid,status:"pending",t:Date.now()});
+else if(a==="ok")await fs.doc(i).update({status:"accepted"});
+else if(a==="no"||a==="rm")await fs.doc(i).delete();
+else if(a==="mute"){P.mute=P.mute||[];const k=P.mute.indexOf(u);if(k<0){P.mute.push(u);earn("mute1")}else P.mute.splice(k,1);sp();badge();render2()}
+else if(a==="chat")openChat(u,i)
+else if(a==="bell"){await Notification.requestPermission();render2()}}catch(x){toast("⚠️","Oops","That did not work. Try again.")}};
+function openChat(u,i){cid=i;readN(x=>x.a&&x.a.i===i);$("ch").innerHTML=dot(u)+nm(u);$("cm").innerHTML="";$("fd").close();$("cd").showModal();if(unsub)unsub();
+unsub=db.collection("chats").doc(i).collection("msgs").orderBy("t").limitToLast(50).onSnapshot(q=>{const mu=P.mute||[];$("cm").innerHTML=q.docs.map(x=>x.data()).filter(m=>!mu.includes(m.from)).map(m=>`<div class="mg${m.from===user.uid?" me":""}">${esc(m.text)}</div>`).join("");$("cm").scrollTop=1e6},e=>toast("⚠️","Chat error","Could not load messages"))}
+$("cf").onsubmit=async e=>{e.preventDefault();const t=$("ct").value.trim();if(!t||!cid)return;$("ct").value="";
+try{await db.collection("chats").doc(cid).collection("msgs").add({from:user.uid,text:t.slice(0,500),t:Date.now()});earn("chat1")}catch(x){toast("⚠️","Not sent","Try again")}};
+$("cx").onclick=()=>{if(unsub)unsub();unsub=null;$("cd").close();$("fd").showModal();render2()};
+if(!me)showAuth();else start();
+</script>
+</body>
+</html>
